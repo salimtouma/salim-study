@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Salim Study V5</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main>
+      <header class="header">
+        <div>
+          <div class="brand">Salim Study <span>V5</span></div>
+          <div class="muted">مدرّسك الذكي ورفيقك لتنظيم الدراسة</div>
+        </div>
+        <div id="date" class="muted"></div>
+      </header>
+
+      <div class="layout">
+        <aside class="panel side">
+          <b>القائمة الرئيسية</b>
+          <nav class="nav">
+            <button class="active" data-page="home">الرئيسية</button>
+            <button data-page="tutor">المدرس الذكي</button>
+            <button data-page="library">مكتبة المنهاج</button>
+            <button data-page="tasks">مهامي</button>
+            <button data-page="timer">المؤقت</button>
+            <button data-page="schedule">الجدول</button>
+            <button data-page="notes">الملخصات</button>
+            <button data-page="sessions">جلساتي</button>
+          </nav>
+          <p class="tiny">V5 • البيانات تحفظ محلياً في هذا الجهاز</p>
+        </aside>
+
+        <div>
+          <section class="page active" id="home">
+            <div class="card">
+              <h2>أهلًا بك في Salim Study V5</h2>
+              <p class="muted">تعلّم على مهل، اسأل، جرّب، وتابع تقدمك.</p>
+              <div class="stats">
+                <div class="stat">
+                  <div class="num" id="pending">0</div>
+                  <div class="muted">مهام غير مكتملة</div>
+                </div>
+                <div class="stat">
+                  <div class="num" id="completed">0</div>
+                  <div class="muted">مهام منجزة</div>
+                </div>
+                <div class="stat">
+                  <div class="num" id="notesCount">0</div>
+                  <div class="muted">ملخصات محفوظة</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h2>ابدأ درساً مع المدرس الذكي</h2>
+              <p class="muted">يمكنك طلب شرح أو أمثلة أو اختبار قصير، وإرفاق صورة لمسألة أو صفحة كتاب.</p>
+              <button class="primary" onclick="page('tutor')">افتح المدرس الذكي</button>
+            </div>
+
+            <div class="card">
+              <h2>تنبيه حول المنهاج</h2>
+              <p class="muted">أرفق الكتب PDF التي لديك، ويبحث المعلم فيها مباشرة. إذا لم يجد جواباً في الكتب، سيقول ذلك بوضوح.</p>
+            </div>
+          </section>
+
+          <section class="page" id="tutor">
+            <div class="card">
+              <h2>المدرس الخصوصي الذكي</h2>
+              <p class="muted">اختر المادة والمرحلة لتوجيه الشرح، ثم تحدث معه بحرية.</p>
+              <div class="row">
+                <select id="grade">
+                  <option>البكالوريا العلمي – سوريا</option>
+                  <option>الثالث الثانوي</option>
+                  <option>الثاني الثانوي</option>
+                  <option>الأول الثانوي</option>
+                  <option>مرحلة أخرى</option>
+                </select>
+                <select id="subjectTutor">
+                  <option>الرياضيات</option>
+                  <option>الفيزياء</option>
+                  <option>الكيمياء</option>
+                  <option>علم الأحياء</option>
+                  <option>اللغة العربية</option>
+                  <option>اللغة الإنكليزية</option>
+                  <option>اللغة الفرنسية</option>
+                  <option>عام / غير محدد</option>
+                </select>
+              </div>
+
+              <div class="toolbar">
+                <button onclick="quickPrompt('اشرح لي الفكرة من البداية وبأسلوب مبسط، ثم أعطني مثالاً.')">إعادة شرح مبسط</button>
+                <button onclick="quickPrompt('أعطني مثالاً محلولاً خطوة بخطوة على هذا الموضوع.')">مثال محلول</button>
+                <button onclick="quickPrompt('اختبر فهمي بثلاثة أسئلة متدرجة، ولا تعرض الحلول قبل إجابتي.')">اختبرني</button>
+                <button onclick="quickPrompt('تابع من آخر نقطة وصلنا إليها واسألني سؤالاً للتأكد من الفهم.')">تابع الدرس</button>
+              </div>
+
+              <div class="chat" id="chat">
+                <div class="msg bot">مرحباً! ما الموضوع الذي ندرسه اليوم؟ اذكر عنوان ا��درس أو أرسل صورة من الكتاب، وسنبدأ خطوة خطوة.</div>
+              </div>
+
+              <form id="chatForm">
+                <textarea id="question" placeholder="اكتب سؤالك… أو اطلب توضيحاً أو مثالاً أو اختباراً" required></textarea>
+                <div class="row">
+                  <label class="tiny" style="flex:2;">إرفاق صورة لمسألة أو صفحة كتاب
+                    <input id="imageFile" type="file" accept="image/png,image/jpeg,image/webp" />
+                  </label>
+                  <button type="submit" class="primary" id="send">إرسال</button>
+                </div>
+                <img id="imagePreview" class="preview" alt="معاينة الصورة" />
+                <div id="chatStatus" class="status" role="status">جارٍ فحص الاتصال بالخادم…</div>
+              </form>
+
+              <button onclick="newChat()">محادثة جديدة</button>
+            </div>
+          </section>
+
+          <section class="page" id="library">
+            <div class="card">
+              <h2>مكتبة المنهاج السوري — البكالوريا العلمي</h2>
+              <p class="muted">استورد ملفات PDF، وسيبحث المدرس داخل نصوصها عند الإجابة.</p>
+
+              <div class="notice">
+                تنبيه: هذه النسخة تركز على تحميل الكتب محلياً داخل التطبيق. يتم حفظ الملفات في مجلد uploads على الخادم، وتمت فهرستها داخل المكتبة.
+              </div>
+
+              <div class="bookgrid" id="subjectCards"></div>
+            </div>
+
+            <div class="card">
+              <h2>إضافة كتاب PDF إلى المكتبة</h2>
+              <p class="muted">يمكنك رفع عدة ملفات PDF، ولكن كل ملف يرفع بشكل مستقل. الحد الأقصى لكل ملف هو 100MB.</p>
+              <form id="bookForm">
+                <label>اسم الكتاب
+                  <input id="bookTitle" placeholder="مثلاً: الرياضيات — البكالوريا العلمي" required />
+                </label>
+
+                <div class="row">
+                  <label>المادة
+                    <select id="bookSubject" required>
+                      <option>الرياضيات</option>
+                      <option>الفيزياء</option>
+                      <option>الكيمياء</option>
+                      <option>علم الأحياء</option>
+                      <option>اللغة العربية</option>
+                      <option>اللغة الإنكليزية</option>
+                      <option>اللغة الفرنسية</option>
+                    </select>
+                  </label>
+                  <label>رابط المصدر الرسمي (اختياري)
+                    <input id="bookSource" type="url" placeholder="https://curricula.moed.gov.sy/..." />
+                  </label>
+                </div>
+
+                <label>ملف الك��اب PDF
+                  <input id="bookFile" type="file" accept=".pdf,application/pdf" required />
+                </label>
+
+                <div class="row">
+                  <button class="primary" id="importBook" type="submit">استيراد وفهرسة الكتاب</button>
+                </div>
+
+                <div id="libraryStatus" class="status" role="status"></div>
+              </form>
+            </div>
+
+            <div class="card">
+              <h2>الكتب المفهرسة على هذا الجهاز</h2>
+              <div id="libraryDocs" class="librarylist">جارٍ تحميل المكتبة…</div>
+            </div>
+
+            <div class="card">
+              <h2>المراجع الرسمية</h2>
+              <div id="officialSources" class="librarylist"></div>
+            </div>
+          </section>
+
+          <section class="page" id="tasks">
+            <div class="card">
+              <h2>مهام اليوم</h2>
+              <div class="row">
+                <input id="taskInput" placeholder="مثلاً: حل تمارين الرياضيات" />
+                <button class="primary" onclick="addTask()">إضافة</button>
+              </div>
+              <ul class="list" id="taskList"></ul>
+            </div>
+          </section>
+
+          <section class="page" id="timer">
+            <div class="card" style="text-align: center;">
+              <h2>مؤقت الدراسة</h2>
+              <p class="muted">اختر مدة التركيز أو خصّصها.</p>
+              <div class="row">
+                <button onclick="setTimer(25)">25 دقيقة</button>
+                <button onclick="setTimer(40)">40 دقيقة</button>
+                <button onclick="setTimer(50)">50 دقيقة</button>
+              </div>
+              <div class="row">
+                <input id="customMinutes" type="number" min="1" max="180" value="30" aria-label="مدة مخصصة بالدقائق" />
+                <button onclick="setTimer(Number(document.getElementById('customMinutes').value))">تطبيق المدة</button>
+              </div>
+              <div class="clock" id="clock">25:00</div>
+              <p class="muted" id="timerStatus">جاهز للبدء</p>
+              <div class="row">
+                <button class="primary" onclick="toggleTimer()" id="timerBtn">ابدأ</button>
+                <button onclick="resetTimer()">إعادة ضبط</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="page" id="schedule">
+            <div class="card">
+              <h2>الجدول الأسبوعي</h2>
+              <p class="muted">من السبت إلى الخميس، والجمعة راحة.</p>
+              <div class="row">
+                <select id="day">
+                  <option>السبت</option>
+                  <option>الأحد</option>
+                  <option>الإثنين</option>
+                  <option>الثلاثاء</option>
+                  <option>الأربعاء</option>
+                  <option>الخميس</option>
+                </select>
+                <select id="subject">
+                  <option>الرياضيات</option>
+                  <option>الفيزياء</option>
+                  <option>الكيمياء</option>
+                  <option>علم الأحياء</option>
+                  <option>اللغة العربية</option>
+                  <option>اللغة الإنكليزية</option>
+                  <option>اللغة الفرنسية</option>
+                  <option>التربية الدينية</option>
+                  <option>التربية الوطنية</option>
+                </select>
+              </div>
+              <div class="row">
+                <input type="time" id="slotTime" />
+                <button class="primary" onclick="addSlot()">إضافة</button>
+              </div>
+              <div id="slots"></div>
+            </div>
+          </section>
+
+          <section class="page" id="notes">
+            <div class="card">
+              <h2>دفتر القوانين والملخصات</h2>
+              <input id="noteTitle" placeholder="عنوان الملخص" />
+              <textarea id="noteBody" placeholder="اكتب القانون أو الملخص هنا..."></textarea>
+              <div class="row">
+                <button class="primary" onclick="addNote()">حفظ الملخص</button>
+              </div>
+              <div id="notesList"></div>
+            </div>
+          </section>
+
+          <section class="page" id="sessions">
+            <div class="card">
+              <h2>ملخص جلسات الدراسة</h2>
+              <p class="muted">تُسجل الجلسات المكتملة تلقائياً عند انتهاء المؤقت.</p>
+              <div id="sessionsList"></div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <footer>Salim Study V5 • نسخة تطويرية محلية</footer>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
